@@ -17,18 +17,28 @@ public class Fish extends Boid {
 
 	@Override
 	public void display(PApplet p, SubPlot plt) {
-
-		float[] pp = plt.getPixelCoord(pos.x, pos.y);
-		float[] vv = plt.getVectorCoord(vel.x, vel.y);
-		PVector vaux = new PVector(vv[0], vv[1]);
-
-		p.pushMatrix();
-		p.translate(pp[0], pp[1]);
-		p.rotate(-vaux.heading());
-
-		p.imageMode(PApplet.CENTER);
-		p.image(img, 0, 0);
-
-		p.popMatrix();
+	    float[] pp = plt.getPixelCoord(pos.x, pos.y);
+	    float[] vv = plt.getVectorCoord(vel.x, vel.y);
+	    PVector vaux = new PVector(vv[0], vv[1]);
+	    
+	    p.pushMatrix();
+	    p.translate(pp[0], pp[1]);
+	    
+	    float fullAngle = vaux.heading();
+	    
+	    float maxTilt = PApplet.PI / 4;
+	    float tiltAngle = PApplet.constrain(fullAngle, -maxTilt, maxTilt);
+	    
+	    if (vaux.x > 0) {
+	        p.scale(-1, 1);  
+	        tiltAngle = -tiltAngle;
+	    }
+	    
+	    p.rotate(tiltAngle);
+	    
+	    p.imageMode(PApplet.CENTER);
+	    p.image(img, 0, 0);
+	    
+	    p.popMatrix();
 	}
 }

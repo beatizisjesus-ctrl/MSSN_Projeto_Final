@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-
 import Comportamentos.Body;
 import Comportamentos.Boid;
 import Comportamentos.Eye;
@@ -11,6 +10,7 @@ import globais.SubPlot;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
+import processing.sound.*;
 
 
 public class OceanApp implements IProcessingApp {
@@ -29,6 +29,10 @@ public class OceanApp implements IProcessingApp {
 	private boolean wIsOn, aIsOn, sIsOn, dIsOn;
 	private PImage sharkMouthOpenImg, sharkMouthCloseImg;
 	private PImage[] fishImgs;
+	private SoundFile sound, killSound;
+	private List<ImageEffect> activeImg, imgToRemove;
+	private ImageEffect image;
+	private PImage[] images;
 	
 	
 	
@@ -37,21 +41,26 @@ public class OceanApp implements IProcessingApp {
 		oceanSet = new OceanSet(parent, plt);
 		algas = new ArrayList<>();
 		
-		// Carregar imagens
+		// Carregar imagens e sons
+		sound = new SoundFile(parent, "data/Jaws-theme-song.wav");
+		sound.loop(); 
+		killSound = new SoundFile(parent, "data/smoke-bomb-6761.wav");
 		sharkMouthCloseImg = parent.loadImage("sharkMouthClose.png");
 		sharkMouthOpenImg = parent.loadImage("sharkMouthOpen.png");
 		sharkMouthCloseImg.resize(230, 0); 
 		sharkMouthOpenImg.resize(230, 0);
+		
 		fishImgs = new PImage[3];
-		fishImgs[0] = parent.loadImage("fish1.png");
-		fishImgs[1] = parent.loadImage("fish2.png");
-		fishImgs[2] = parent.loadImage("fish3.png");
-
-		for (PImage img : fishImgs) {
-		    img.resize(60, 0); 
+		activeImg = new ArrayList<>();
+		images = new PImage[3];
+		for (int i = 0; i < 3; i++) {
+			int fileIndex = i + 1;
+			fishImgs[i] = parent.loadImage("fish" + fileIndex + ".png");
+			fishImgs[i].resize(60, 0); 
+			images[i] = parent.loadImage("sangue" + fileIndex + ".png");
+			images[i].resize(60, 0);
 		}
 
-		
 		flock = new Flock(20, 10f, .1f, parent.color(0, 0, 255), sacWeights, parent, plt, fishImgs);
 		player = new Shark(new PVector(), 10f, .15f, parent.color(0255, 0, 0), parent, plt, sharkMouthCloseImg, sharkMouthOpenImg);
 		allTrackingBodiesFish = new ArrayList<Body>();
@@ -83,7 +92,7 @@ public class OceanApp implements IProcessingApp {
 		visibleBoids = getVisibleBoids();
 		int visibleCount = visibleBoids.size();
 		
-		if (visibleCount == 1 || visibleCount == 2) {
+		if (visibleCount > 0 && visibleCount < 4) {
 			target = (Boid) visibleBoids.get(0);
 			player.getEye().target = target;
 			kill(target, player);
@@ -96,6 +105,15 @@ public class OceanApp implements IProcessingApp {
 		flock.applyBehaviour(dt);
 		flock.display(parent, plt);
 		player.display(parent, plt);
+		
+		imgToRemove = new ArrayList<>();
+		for (ImageEffect image : activeImg) {
+			image.display(parent, plt);
+			if (image.isFinished()) {
+				imgToRemove.add(image);
+			}
+		}
+		activeImg.removeAll(imgToRemove);
 	}
 	
 	private void playerMove(float dt) {
@@ -130,6 +148,12 @@ public class OceanApp implements IProcessingApp {
 				if (player instanceof Shark) {
 				    ((Shark) player).openMouth();
 				}
+				
+				image = new ImageEffect(target.getPos(), target.getRadius()*3, images, 10, killSound);
+				activeImg.add(image);
+				//if (killSound != null) {
+				//	killSound.play();
+				//}
 				flock.removeBoid(target);
 				this.allTrackingBodiesFish.remove(target);
 				killer.setEye(new Eye(killer, this.allTrackingBodiesShark));

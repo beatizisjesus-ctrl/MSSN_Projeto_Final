@@ -8,14 +8,13 @@ public class ProcessingSetup extends PApplet {
     private int lastUpdateTime;
 
     public static void main(String[] args) {
-        app = new OceanApp();
+        app = new OceanApp2();
         PApplet.main(ProcessingSetup.class.getName());
     }
 
     @Override
     public void settings() {
-        if (app instanceof OceanApp) size(800, 800);
-        else size(800, 600);
+        size(800, 800);
     }
 
     @Override
