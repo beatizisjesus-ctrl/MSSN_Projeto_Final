@@ -1,3 +1,5 @@
+
+import globais.IProcessingApp;
 import processing.core.PApplet;
 
 public class ProcessingSetup extends PApplet {

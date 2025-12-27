@@ -1,6 +1,4 @@
-
-
-
+package globais;
 public class SubPlot {
 
     private double[] window;
@@ -51,6 +49,12 @@ public class SubPlot {
     }
 
     public float[] getWorldCoord(float[] xy) { return getPixelCoord(xy[0], xy[1]); }
+    
+    public float[] getBoundingBox() {
+        float[] c1 = getPixelCoord(window[0], window[2]);
+        float[] c2 = getPixelCoord(window[1], window[3]);
+        return new float[]{c1[0], c2[1], c2[0] - c1[0], c1[1] - c2[1]};
+    }
 
     public boolean isInside(float xx, float yy) {
         double[] c = getWorldCoord(xx, yy);

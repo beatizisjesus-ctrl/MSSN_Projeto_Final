@@ -1,4 +1,4 @@
-
+package globais;
 import processing.core.PApplet;
 
 public interface IProcessingApp {
