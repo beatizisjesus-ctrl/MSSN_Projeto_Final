@@ -5,21 +5,12 @@ import Comportamentos.Boid;
 import Comportamentos.Eye;
 import Comportamentos.Flock;
 import Comportamentos.Shark;
-import globais.IProcessingApp;
-import globais.SubPlot;
 import processing.core.PApplet;
-import processing.core.PImage;
 import processing.core.PVector;
-import processing.sound.*;
 
 
-public class OceanApp implements IProcessingApp {
+public class OceanApp extends OceanAppBase {
 	
-	private double [] window = {-2, 2, -2, 2}; //espaço físico(tela pc) onde o programa aparece (xmin, xmax, ymin, ymax), mundo
-	private float[] viewport = {0,0 , 1,1}; //é uma área dentro da janela onde realmente se desenha ou visualiza a cena. (x,y em que começa neste caso 0,0, e 1,1,ocupa 100% da janela)
-	private SubPlot plt;
-	private OceanSet oceanSet;
-	private List<Alga> algas; //lista de algas
 	private Flock flock;
 	private Boid player, target;
 	private float[] sacWeights = { 1f, 1f, 1f };
@@ -27,42 +18,15 @@ public class OceanApp implements IProcessingApp {
 	private List<Body> allTrackingBodiesFish,allTrackingBodiesShark, visibleBoids;
 	private List<Boid> boidsList;
 	private boolean wIsOn, aIsOn, sIsOn, dIsOn;
-	private PImage sharkMouthOpenImg, sharkMouthCloseImg;
-	private PImage[] fishImgs;
-	private SoundFile sound, killSound;
-	private List<ImageEffect> activeImg, imgToRemove;
-	private ImageEffect image;
-	private PImage[] images;
 	
 	
-	
-	public void setup(PApplet parent) {
-		plt = new SubPlot (window, viewport, parent.width, parent.height); 
-		oceanSet = new OceanSet(parent, plt);
-		algas = new ArrayList<>();
-		
-		// Carregar imagens e sons
-		sound = new SoundFile(parent, "data/Jaws-theme-song.wav");
-		sound.loop(); 
-		killSound = new SoundFile(parent, "data/smoke-bomb-6761.wav");
-		sharkMouthCloseImg = parent.loadImage("sharkMouthClose.png");
-		sharkMouthOpenImg = parent.loadImage("sharkMouthOpen.png");
-		sharkMouthCloseImg.resize(230, 0); 
-		sharkMouthOpenImg.resize(230, 0);
-		
-		fishImgs = new PImage[3];
-		activeImg = new ArrayList<>();
-		images = new PImage[3];
-		for (int i = 0; i < 3; i++) {
-			int fileIndex = i + 1;
-			fishImgs[i] = parent.loadImage("fish" + fileIndex + ".png");
-			fishImgs[i].resize(60, 0); 
-			images[i] = parent.loadImage("sangue" + fileIndex + ".png");
-			images[i].resize(60, 0);
-		}
-
-		flock = new Flock(20, 10f, .1f, parent.color(0, 0, 255), sacWeights, parent, plt, fishImgs);
+	@Override
+	protected void setupSpecifics(PApplet parent) {
+		// Inicialização de Flock e Player (Shark)
+		flock = new Flock(50, 10f, .1f, parent.color(0, 0, 255), sacWeights, parent, plt, fishImgs);
 		player = new Shark(new PVector(), 10f, .15f, parent.color(0255, 0, 0), parent, plt, sharkMouthCloseImg, sharkMouthOpenImg);
+		
+		// Configuração dos Eyes para o Flock
 		allTrackingBodiesFish = new ArrayList<Body>();
 		allTrackingBodiesFish.add(player);
 		boidsList = new ArrayList<Boid>(flock.getBoids());
@@ -71,6 +35,7 @@ public class OceanApp implements IProcessingApp {
 			b.setEye(eye);
 		}
 		
+		// Configuração do Eye para o Player (Shark)
 		allTrackingBodiesShark = new ArrayList<Body>(flock.getBoids());
 		eye = new Eye(player, allTrackingBodiesShark);
 		player.setEye(eye);
@@ -82,13 +47,9 @@ public class OceanApp implements IProcessingApp {
     }
 	
 	
-	public void draw(PApplet parent, float dt) {
-		oceanSet.display(parent, plt, dt);
-		for(Alga a : algas) {// a cada alga criada e introduzida na lista chama-se a funçao de crescer e mostrar a mesma atraves da turtle
-            a.grow(dt);
-            a.display(parent, plt);
-        }
-		
+	@Override
+	protected void drawSpecifics(PApplet parent, float dt) {
+		// Lógica de caça
 		visibleBoids = getVisibleBoids();
 		int visibleCount = visibleBoids.size();
 		
@@ -99,21 +60,11 @@ public class OceanApp implements IProcessingApp {
 		} 
 		
 		playerMove(dt);
-		float[] bb = plt.getBoundingBox();
-		parent.fill(255, 84);
-		parent.rect(bb[0], bb[1], bb[2], bb[3]);
 		flock.applyBehaviour(dt);
+		
+		// Desenho
 		flock.display(parent, plt);
 		player.display(parent, plt);
-		
-		imgToRemove = new ArrayList<>();
-		for (ImageEffect image : activeImg) {
-			image.display(parent, plt);
-			if (image.isFinished()) {
-				imgToRemove.add(image);
-			}
-		}
-		activeImg.removeAll(imgToRemove);
 	}
 	
 	private void playerMove(float dt) {
@@ -149,11 +100,9 @@ public class OceanApp implements IProcessingApp {
 				    ((Shark) player).openMouth();
 				}
 				
-				image = new ImageEffect(target.getPos(), target.getRadius()*3, images, 10, killSound);
+				ImageEffect image = new ImageEffect(target.getPos(), target.getRadius()*3, images, 10, killSound);
 				activeImg.add(image);
-				//if (killSound != null) {
-				//	killSound.play();
-				//}
+				
 				flock.removeBoid(target);
 				this.allTrackingBodiesFish.remove(target);
 				killer.setEye(new Eye(killer, this.allTrackingBodiesShark));
@@ -161,47 +110,20 @@ public class OceanApp implements IProcessingApp {
 		}
 	}
 	
-	public void keyPressed(PApplet parent) {
-		if (parent.key == 'm' || parent.key == 'M') {
-
-	        // X aleatório ao longo da areia
-	        float x = parent.random(-2f, 2f); //do min ao max do retangulo que representa areia
-
-	        // Y fixo na areia
-	        float y = -1.75f;
-
-	        PVector pos = new PVector(x, y);
-
-	        Rule_LSyst[] ruleset = new Rule_LSyst[1];
-	        ruleset[0] = new Rule_LSyst('F', "F[+F]F[-F]F");
-	        Alga alga = new Alga("F", ruleset, pos, 0.05f, PApplet.radians(25f), 4, 0.5f, 1f, parent);;
-
-	        algas.add(alga);
-	    }
-		
+	@Override
+	protected void keyPressedSpecifics(PApplet parent) {
+		// Lógica de movimento do jogador
 		if(parent.key == 'w' || parent.key == 'W') {
-			wIsOn = true;
-			aIsOn = false; 
-			sIsOn = false; 
-			dIsOn = false;
+			wIsOn = true; aIsOn = false; sIsOn = false; dIsOn = false;
 		}
 		if(parent.key == 'a' || parent.key == 'a') {
-			aIsOn = true;
-			wIsOn = false;
-			sIsOn = false; 
-			dIsOn = false;
+			aIsOn = true; wIsOn = false; sIsOn = false; dIsOn = false;
 		}
 		if(parent.key == 's' || parent.key == 'S') {
-			sIsOn = true;
-			wIsOn = false;
-			aIsOn = false;  
-			dIsOn = false;
+			sIsOn = true; wIsOn = false; aIsOn = false; dIsOn = false;
 		}
 		if(parent.key == 'd' || parent.key == 'D') {
-			dIsOn = true;
-			wIsOn = false;
-			aIsOn = false; 
-			sIsOn = false; 
+			dIsOn = true; wIsOn = false; aIsOn = false; sIsOn = false; 
 		}
 	}
 
@@ -210,19 +132,9 @@ public class OceanApp implements IProcessingApp {
 	public void mousePressed(PApplet parent) {
 		double[] ww = plt.getWorldCoord(parent.mouseX, parent.mouseY);
 		flock.addBoid(new PVector((float)ww[0],(float) ww[1]));
-	}
-
-
-	@Override
-	public void mouseReleased(PApplet parent) {
-		// TODO Auto-generated method stub
 		
-	}
-
-
-	@Override
-	public void mouseDragged(PApplet parent) {
-		// TODO Auto-generated method stub
-		
+		// Atualizar o Eye do Player para incluir o novo Boid
+		allTrackingBodiesShark = new ArrayList<Body>(flock.getBoids());
+	    player.setEye(new Eye(player, allTrackingBodiesShark));
 	}
 }

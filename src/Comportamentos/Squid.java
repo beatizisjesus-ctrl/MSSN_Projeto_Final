@@ -19,6 +19,7 @@ public class Squid extends Boid {
 	    float[] vv = plt.getVectorCoord(vel.x, vel.y);
 	    PVector vaux = new PVector(vv[0], vv[1]);
 	    
+	    // Rotação da imagem
 	    p.pushMatrix();
 		p.translate(pp[0], pp[1]);
 		p.rotate(-vaux.heading());

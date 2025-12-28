@@ -9,7 +9,6 @@ public class Fish extends Boid {
 	private PImage img;
 
 	public Fish(PVector pos, float mass, float radius, int color, PApplet p, SubPlot plt, PImage[] fishImages) {
-
 		super(pos, mass, radius, color, p, plt);
 		int idx = (int) p.random(fishImages.length);
 		this.img = fishImages[idx];
@@ -24,8 +23,9 @@ public class Fish extends Boid {
 	    p.pushMatrix();
 	    p.translate(pp[0], pp[1]);
 	    
-	    float fullAngle = vaux.heading();
 	    
+	    // Rotação da imagem, limita a inclinação (para os peixes não ficarem que cabeça para baixo ao nadarem)
+	    float fullAngle = vaux.heading();
 	    float maxTilt = PApplet.PI / 4;
 	    float tiltAngle = PApplet.constrain(fullAngle, -maxTilt, maxTilt);
 	    
@@ -38,7 +38,6 @@ public class Fish extends Boid {
 	    
 	    p.imageMode(PApplet.CENTER);
 	    p.image(img, 0, 0);
-	    
 	    p.popMatrix();
 	}
 }
