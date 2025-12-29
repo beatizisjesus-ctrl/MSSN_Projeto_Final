@@ -25,7 +25,7 @@ public class OceanApp2 extends OceanAppBase {
 	protected void setupSpecifics(PApplet parent) {
 		// Carregar imagem do Squid
 		squidImage = parent.loadImage("squid.png");
-		squidImage.resize(70, 0);
+		squidImage.resize(110, 0);
 
 		// Inicialização de Flocks
 		flock = new Flock(30, 10f, .1f, parent.color(0, 0, 255), sacWeights, parent, plt, fishImgs); // Peixes grandes
@@ -48,7 +48,7 @@ public class OceanApp2 extends OceanAppBase {
 		// Inicialização do Squid
 		float squidX = parent.random((float) window[0], (float) window[1]);
 		float squidY = parent.random((float) window[2], (float) window[3]);
-		squid = new Squid(new PVector(squidX, squidY), 10f, .15f, parent.color(0255, 0, 0), parent, plt, squidImage);
+		squid = new Squid(new PVector(squidX, squidY), 45f, .45f, parent.color(0255, 0, 0), parent, plt, squidImage);
 		squid.addBehaviour(new Wander(5f));
 
 		// Configuração dos Eyes

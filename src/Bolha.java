@@ -36,7 +36,7 @@ public class Bolha {
     public void display(PApplet p, SubPlot plt) {
         float[] pix = plt.getPixelCoord(pos.x, pos.y); // Converte coordenadas do mundo para píxeis
         p.imageMode(PApplet.CENTER); //Usamos CENTER porque queremos que a posição da bolha corresponda ao centro da imagem.
-        p.image(img, pix[0], pix[1], 20, 20); // Converte coordenadas do mundo para píxeis
+        p.image(img, pix[0], pix[1], 10, 10); // Converte coordenadas do mundo para píxeis
     }
 
     // Verifica se a bolha saiu da água (chegou ao topo do mundo)
