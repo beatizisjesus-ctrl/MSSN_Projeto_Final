@@ -16,7 +16,7 @@ public class Eye {
 	public Eye(Boid me, List<Body> allTrackingBodies) {
 		this.me =  me;
 		this.allTrackingBodies = allTrackingBodies;
-		this.target = allTrackingBodies.get(0);
+		this.target = allTrackingBodies.get(0); //se tivermos 1 objeto, esse é o target
 	}
 
 	public List<Body> getFarSight(){
@@ -30,7 +30,7 @@ public class Eye {
 	public void look() {
 		farSight = new ArrayList<Body>();
 		nearSight = new ArrayList<Body>();
-		for(Body b : allTrackingBodies) {
+		for(Body b : allTrackingBodies) { //destingue os corpos por alcanse, ou seja, se estiver no campo de visao adiciona à lista respetiva
 			if(farSight(b.getPos())) {
 				farSight.add(b);
 			}

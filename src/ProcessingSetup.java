@@ -8,7 +8,7 @@ public class ProcessingSetup extends PApplet {
     private int lastUpdateTime;
 
     public static void main(String[] args) {
-        app = new OceanApp2();
+        app = new OceanApp();
         PApplet.main(ProcessingSetup.class.getName());
     }
 

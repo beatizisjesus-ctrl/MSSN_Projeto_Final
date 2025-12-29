@@ -27,6 +27,7 @@ public class Boid extends Body {
 		window = plt.getWindow();
 	}
 
+	//primeiro temos de ter todos os boids e só depois é que implementamos o olho
 	public void setEye(Eye eye) {
 		this.eye = eye;
 	}
@@ -39,27 +40,7 @@ public class Boid extends Body {
 		this.index = index;
 	}
 	
-	public void setVelocity(int n, boolean aux) {
-		if(aux) {
-			dna.maxSpeed += n;
-		}else {
-			dna.maxSpeed -= n;
-			if(dna.maxSpeed<0) {
-				dna.maxSpeed = 0;
-			}
-		}
-	}
-	
-	public void setForce(int n, boolean aux) {
-		if(aux) {
-			dna.maxForce += n;
-		}else {
-			dna.maxForce -= n;
-			if(dna.maxForce<0) {
-				dna.maxForce = 0;
-			}
-		}
-	}
+
 
 	public void setVisionAngle(float angle) {
 		dna.visionAngle = angle;
@@ -74,7 +55,7 @@ public class Boid extends Body {
 	public void setShape(PApplet p, SubPlot plt) {
 		float[] rr = plt.getVectorCoord(radius, radius);
 		shape = p.createShape();
-		shape.beginShape();
+		shape.beginShape(); //antes de criar a forma
 		shape.noStroke();
 		shape.fill(color);
 		shape.vertex(-rr[0], rr[0] / 2);
@@ -150,9 +131,9 @@ public class Boid extends Body {
 		float[] pp = plt.getPixelCoord(pos.x, pos.y);
 		float[] vv = plt.getVectorCoord(vel.x, vel.y);
 		PVector vaux = new PVector(vv[0], vv[1]);
-		p.translate(pp[0], pp[1]);
-		p.rotate(-vaux.heading()); 
-		p.shape(shape);
+		p.translate(pp[0], pp[1]); //coloca os sistema de eixos na posição do boid
+		p.rotate(-vaux.heading()); //orientação do boid, heading da o angulo em radianos, que o vetor faz com o eixos do x
+		p.shape(shape);//por omissao, no ponto (0,0)
 		p.popMatrix();
 	}
 
