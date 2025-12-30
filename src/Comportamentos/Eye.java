@@ -44,7 +44,7 @@ public class Eye {
 		PVector r = PVector.sub(t, me.getPos());
 		float d = r.mag();
 		float angle = PVector.angleBetween(r, me.getVel());
-		return ((d > 0) && (d < maxDistance) && (angle < maxAngle));
+		return ((d > 0) && (d < maxDistance) && (angle < maxAngle));//d>0 para nunca considerar o o proprio boid como fazendo parte da lista
 	}
 	
 	private boolean farSight(PVector t) {

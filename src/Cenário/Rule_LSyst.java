@@ -1,3 +1,4 @@
+package Cenário;
 
 public class Rule_LSyst {
 	private final char symbol;//simbolo que desencadeia a regra

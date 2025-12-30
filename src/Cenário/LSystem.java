@@ -1,3 +1,4 @@
+package Cenário;
 public class LSystem {
 	private String sequence;
     private final Rule_LSyst[] ruleset;//array de objetos Rule, que definem como cada símbolo é substituído.

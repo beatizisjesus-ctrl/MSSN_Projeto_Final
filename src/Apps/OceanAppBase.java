@@ -1,5 +1,11 @@
+package Apps;
 import java.util.ArrayList;
 import java.util.List;
+
+import Cenário.Alga;
+import Cenário.ImageEffect;
+import Cenário.OceanSet;
+import Cenário.Rule_LSyst;
 import globais.IProcessingApp;
 import globais.SubPlot;
 import processing.core.PApplet;

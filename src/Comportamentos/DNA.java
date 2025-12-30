@@ -21,13 +21,13 @@ public class DNA {
 		visionSafeDistance = 0.25f * visionDistance;
 		visionAngle = (float)Math.PI * 0.3f; 
 		//Pursuit
-		deltaTPursuit = random(0.5f,1f);
+		deltaTPursuit = random(0.5f,1f);// variaçao de tempo escolhida para fazer pursuit
 		//Arrive
 		radiusArrive = random(3,5);
 		//Wander
-		deltaTWander = random(.3f, .6f); 
-		radiusWander = random(1f,3f);
-		deltaPhiWander = (float)Math.PI/8;
+		deltaTWander = random(.3f, .6f); //projeçao do ponto, no fram seguinte
+		radiusWander = random(1f,3f); // raio do circulo feito, no ponto projetado
+		deltaPhiWander = (float)Math.PI/8; //angulo feito com o eixo x, é na area dada por este angulo que se vai obter um ponto aleatorimanete
 	}
 	
 	public DNA(DNA dna, boolean mutate) {

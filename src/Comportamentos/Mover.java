@@ -4,11 +4,11 @@ import processing.core.PVector;
 
 public abstract class Mover {
 
-    protected PVector pos;
-    public PVector vel;
-    public PVector acc;
-    protected float mass;
-    private static final double G = 6.67e-11;
+    protected PVector pos;//posiçao
+    public PVector vel;//velocidade
+    public PVector acc;//acelereação acumulada no frame atual
+    protected float mass; //massa do objeto (influencia forças)
+    private static final double G = 6.67e-11; //constante gravitacional
 
     protected Mover(PVector pos, PVector vel, float mass) {
         this.pos = pos.copy();

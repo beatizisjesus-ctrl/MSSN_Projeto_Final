@@ -1,5 +1,8 @@
+package Apps;
 import java.util.ArrayList;
 import java.util.List;
+
+import Cenário.ImageEffect;
 import Comportamentos.Body;
 import Comportamentos.Boid;
 import Comportamentos.Eye;

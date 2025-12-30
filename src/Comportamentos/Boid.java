@@ -14,7 +14,7 @@ public class Boid extends Body {
 	public DNA dna;
 	public Eye eye;
 	private List<Behaviour> behaviours;
-	public float phiWander;
+	public float phiWander; //guarda-se o angulo par afazer wander, para se calcular o seguinte
 	private double[] window;
 	public int index;
 	private float sumWeights;

@@ -1,5 +1,5 @@
-
-import globais.IProcessingApp;
+package globais;
+import Apps.OceanApp;
 import processing.core.PApplet;
 
 public class ProcessingSetup extends PApplet {
