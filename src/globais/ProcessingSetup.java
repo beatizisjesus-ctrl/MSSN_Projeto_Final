@@ -1,5 +1,6 @@
 package globais;
 import Apps.OceanApp;
+import Apps.OceanApp2;
 import processing.core.PApplet;
 
 public class ProcessingSetup extends PApplet {
@@ -7,8 +8,9 @@ public class ProcessingSetup extends PApplet {
     private static IProcessingApp app;
     private int lastUpdateTime;
 
-    public static void main(String[] args) {
-        app = new OceanApp();
+    public static void startApp(int i) {
+        if(i == 0) app = new OceanApp();
+        else if(i == 1) app = new OceanApp2();
         PApplet.main(ProcessingSetup.class.getName());
     }
 
